@@ -1,16 +1,15 @@
-def check_robot_position2(R, C):
-    if R < 1 or R > 5 or C < 1 or C > 7:
-        return "NOT OK"
-    if (1 <= R <= 2) and (4 <= C <= 7):
-        return "NOT OK"
-    return "OK"
-
 import pytest
+from source import check_robot_cleaning
 
-@pytest.mark.parametrize("R,C,expected", [
-    (0,2,"NOT OK"),
-    (1,6,"NOT OK"),
-    (3,2,"OK"),
+obstacles = [(3, 3), (4, 5)]
+
+@pytest.mark.parametrize("R,C,obstacles,expected", [
+    (0, 2, [(3, 3), (4, 5)], "NOT OK"),
+    (1, 6, [(3, 3), (4, 5)], "NOT OK"),
+    (3, 6, [], "OK"),
+    (3, 4, [(3, 3)], "OK"),
+    (3, 3, [(3, 3)], "NOT OK"),
 ])
-def test_robot(R,C,expected):
-    assert check_robot_position2(R,C) == expected
+def test_check_robot_status(R, C, obstacles, expected):
+    result = check_robot_cleaning(R, C, obstacles)
+    assert result == expected
